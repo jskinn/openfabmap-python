@@ -27,3 +27,13 @@
 *.exe
 *.out
 *.app
+
+# project files
+*.project
+
+# build directory
+build/
+
+# temporary files
+*~
+
