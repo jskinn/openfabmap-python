@@ -7,10 +7,12 @@ Requires:
 - Boost Python
 
 Building:
-  cd /path/to/source
-  mkdir build
-  cd build
-  cmake -DOpenCV_DIR=/path/to/opencv -DPY_INSTALL_DIR=/python/install/path ..
-  make
-  make install
+```bash
+cd /path/to/source
+mkdir build
+cd build
+cmake -DOpenCV_DIR=/path/to/opencv -DPY_INSTALL_DIR=/python/install/path ..
+make
+make install
+```
 
