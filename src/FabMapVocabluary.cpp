@@ -44,20 +44,18 @@ cv::Mat pyof2::FabMapVocabluary::generateBOWImageDescs(const cv::Mat& frame) con
 
 void pyof2::FabMapVocabluary::save(cv::FileStorage fileStorage) const
 {
+    // Note that this is a partial save, assume that the settings are saved elsewhere.
     fileStorage << "Vocabluary" << vocab;
-    //TODO: Find a way to save the detector and extractor settings.
 }
 
-std::shared_ptr<pyof2::FabMapVocabluary> pyof2::FabMapVocabluary::load(cv::FileStorage fileStorage)
+std::shared_ptr<pyof2::FabMapVocabluary> pyof2::FabMapVocabluary::load(const boost::python::dict& settings, cv::FileStorage fileStorage)
 {
     cv::Mat vocab;
     fileStorage["Vocabluary"] >> vocab;
     
-    // TODO: Find a way to save the settings used to make the detector and extractor
-    
     return std::make_shared<pyof2::FabMapVocabluary>(
-        pyof2::generateDetector(boost::python::dict()),
-        pyof2::generateExtractor(boost::python::dict()),
+        pyof2::generateDetector(settings),
+        pyof2::generateExtractor(settings),
         vocab);
 }
 

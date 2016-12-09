@@ -15,7 +15,7 @@ BOOST_PYTHON_MODULE(openFABMAP)
         .def("build_vocabluary", &pyof2::FabMapVocabluaryBuilder::buildVocabluary);
     
     boost::python::class_<pyof2::ChowLiuTree, std::shared_ptr<pyof2::ChowLiuTree>>(
-            "ChowLiuTree", boost::python::init<std::shared_ptr<pyof2::FabMapVocabluary>, double>())
+            "ChowLiuTree", boost::python::init<std::shared_ptr<pyof2::FabMapVocabluary>, boost::python::dict>())
         .def("add_training_image", &pyof2::ChowLiuTree::addTrainingImage)
         .def("build_chow_liu_tree", &pyof2::ChowLiuTree::buildChowLiuTree)
         .def("save", &pyof2::ChowLiuTree::save)

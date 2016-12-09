@@ -10,8 +10,8 @@ namespace pyof2
 class ChowLiuTree
 {
 public:
-    ChowLiuTree(std::shared_ptr<FabMapVocabluary> vocabluary, double lowerInformationBound);
-    ChowLiuTree(std::shared_ptr<FabMapVocabluary> vocabluary, cv::Mat chowLiuTree, cv::Mat fabmapTrainData, double lowerInformationBound);
+    ChowLiuTree(std::shared_ptr<FabMapVocabluary> vocabluary, boost::python::dict settings);
+    ChowLiuTree(std::shared_ptr<FabMapVocabluary> vocabluary, cv::Mat chowLiuTree, cv::Mat fabmapTrainData, boost::python::dict settings);
     virtual ~ChowLiuTree();
     
     // These function are exposed to python
@@ -19,7 +19,7 @@ public:
     void buildChowLiuTree();
     
     void save(std::string filename) const;
-    static std::shared_ptr<ChowLiuTree> load(std::string filename);
+    static std::shared_ptr<ChowLiuTree> load(boost::python::dict settings, std::string filename);
     
     bool isTreeBuilt() const;
     std::shared_ptr<FabMapVocabluary> getVocabluary() const;

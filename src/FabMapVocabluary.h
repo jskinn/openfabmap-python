@@ -1,6 +1,7 @@
 #ifndef FABMAPVOCABLUARY_H
 #define FABMAPVOCABLUARY_H
 
+#include <string>
 #include <memory>
 #include <Python.h>
 #include <boost/python.hpp>
@@ -20,7 +21,7 @@ public:
     cv::Mat generateBOWImageDescs(const cv::Mat& frame) const;
     
     void save(cv::FileStorage fileStorage) const;
-    static std::shared_ptr<FabMapVocabluary> load(cv::FileStorage fileStorage);
+    static std::shared_ptr<FabMapVocabluary> load(const boost::python::dict& settings, cv::FileStorage fileStorage);
     
 private:
     cv::Ptr<cv::FeatureDetector> detector;

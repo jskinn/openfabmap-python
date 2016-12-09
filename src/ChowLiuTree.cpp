@@ -5,24 +5,27 @@
 
 // ----------------- ChowLiuTree -----------------
 
-pyof2::ChowLiuTree::ChowLiuTree(std::shared_ptr<FabMapVocabluary> vocabluary, double lowerInformationBound) :
-    vocabluary(vocabluary),
-    chowLiuTree(),
-    fabmapTrainData(),
-    lowerInformationBound(lowerInformationBound),
-    treeBuilt(false)
+pyof2::ChowLiuTree::ChowLiuTree(std::shared_ptr<FabMapVocabluary> vocabluary, boost::python::dict settings) :
+    ChowLiuTree(vocabluary, cv::Mat(), cv::Mat(), settings)
 {
     
 }
 
-pyof2::ChowLiuTree::ChowLiuTree(std::shared_ptr<FabMapVocabluary> vocabluary, cv::Mat chowLiuTree, cv::Mat fabmapTrainData, double lowerInformationBound) :
+pyof2::ChowLiuTree::ChowLiuTree(std::shared_ptr<FabMapVocabluary> vocabluary, cv::Mat chowLiuTree, cv::Mat fabmapTrainData, boost::python::dict settings) :
     vocabluary(vocabluary),
     chowLiuTree(std::move(chowLiuTree)),
     fabmapTrainData(std::move(fabmapTrainData)),
-    lowerInformationBound(lowerInformationBound),
+    lowerInformationBound(0.0005),
     treeBuilt(!this->chowLiuTree.empty())
 {
-    
+    if (settings.has_key("ChowLiuOptions"))
+    {
+        boost::python::dict trainSettings = boost::python::extract<boost::python::dict>(settings.get("ChowLiuOptions"));
+        if (trainSettings.has_key("LowerInfoBound"))
+        {
+            lowerInformationBound = boost::python::extract<double>(trainSettings.get("LowerInfoBound"));
+        }
+    }
 }
 
 pyof2::ChowLiuTree::~ChowLiuTree()
@@ -76,26 +79,20 @@ void pyof2::ChowLiuTree::save(std::string filename) const
     cv::FileStorage fs;	
     fs.open(filename, cv::FileStorage::WRITE);
     vocabluary->save(fs);
-    
-    fs << "LowerInformationBound" << lowerInformationBound;
     if (treeBuilt)
     {
         fs << "ChowLiuTree" << chowLiuTree;
         fs << "FabMapTrainingData" << fabmapTrainData;
     }
-    
     fs.release();
 }
 
-std::shared_ptr<pyof2::ChowLiuTree> pyof2::ChowLiuTree::load(std::string filename)
+std::shared_ptr<pyof2::ChowLiuTree> pyof2::ChowLiuTree::load(boost::python::dict settings, std::string filename)
 {
     cv::FileStorage fs;	
     fs.open(filename, cv::FileStorage::READ);
     
-    std::shared_ptr<pyof2::FabMapVocabluary> vocab = pyof2::FabMapVocabluary::load(fs);
-    
-    double lowerInformationBound;
-    fs["LowerInformationBound"] >> lowerInformationBound;
+    std::shared_ptr<pyof2::FabMapVocabluary> vocab = pyof2::FabMapVocabluary::load(settings, fs);
     
     cv::Mat chowLiuTree;
     fs["ChowLiuTree"] >> chowLiuTree;
@@ -105,5 +102,5 @@ std::shared_ptr<pyof2::ChowLiuTree> pyof2::ChowLiuTree::load(std::string filenam
     
     fs.release();
     
-    return std::make_shared<pyof2::ChowLiuTree>(vocab, chowLiuTree, fabmapTrainData, lowerInformationBound);
+    return std::make_shared<pyof2::ChowLiuTree>(vocab, chowLiuTree, fabmapTrainData, settings);
 }
