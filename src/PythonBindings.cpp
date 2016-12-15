@@ -27,6 +27,6 @@ BOOST_PYTHON_MODULE(openFABMAP)
                 std::shared_ptr<pyof2::ChowLiuTree>,
                 boost::python::dict>())
         .def("load_and_process_image", &pyof2::OpenFABMAPPython::loadAndProcessImage)
-        .def("get_all_matches", &pyof2::OpenFABMAPPython::getAllMatches)
-        .def("get_confusion_matrix", &pyof2::OpenFABMAPPython::getConfusionMatrix);
+        .def("get_last_match", &pyof2::OpenFABMAPPython::getLastMatch)
+        .def("get_all_loop_closures", &pyof2::OpenFABMAPPython::getAllLoopClosures);
 }

@@ -61,8 +61,8 @@
 pyof2::OpenFABMAPPython::OpenFABMAPPython(std::shared_ptr<pyof2::ChowLiuTree> chowLiuTree, boost::python::dict settings) :
         vocabluary(chowLiuTree->getVocabluary()),
         fabmap(),
-        allMatches(),
-        numPlaces(0)
+        lastMatch(-1),
+        loopClosures()
 {
     // Build the chow liu tree, if it hasn't been already.
     if (!chowLiuTree->isTreeBuilt())
@@ -177,65 +177,31 @@ bool pyof2::OpenFABMAPPython::loadAndProcessImage(std::string imageFile)
         {    
             std::vector<of2::IMatch> matches;
             fabmap->localize(bow, matches, true);
-            ++numPlaces;
-            allMatches.push_back(std::move(matches));
+            
+            double bestLikelihood = 0.0;
+            int bestMatchIndex = -1;
+            for (std::vector<of2::IMatch>::iterator iter = matches.begin(); iter != matches.end(); ++iter)
+            {
+                if (iter->likelihood > bestLikelihood)
+                {
+                    bestLikelihood = iter->likelihood;
+                    bestMatchIndex = iter->imgIdx;
+                }
+            }
+            lastMatch = bestMatchIndex;
+            loopClosures.append(bestMatchIndex);
             return true;
         }        
     }
     return false;
 }
 
-boost::python::list pyof2::OpenFABMAPPython::getAllMatches() const
+int pyof2::OpenFABMAPPython::getLastMatch() const
 {
-    boost::python::list matchesList;
-    for (unsigned int i = 0; i < allMatches.size(); ++i)
-    {
-        for (std::vector<of2::IMatch>::const_iterator iter = allMatches[i].begin(); iter != allMatches[i].end(); ++iter)
-        {
-            if (iter->match != 0)
-            {
-                if(iter->imgIdx < 0) {
-                    //add the new place to the confusion matrix 'diagonal'
-                    matchesList.append(boost::python::make_tuple(i, (int)allMatches[i].size()-1, iter->match));
-
-                }
-                else {
-                    matchesList.append(boost::python::make_tuple(i, iter->imgIdx, iter->match));
-                }
-            }
-        }
-    }
-    return matchesList;
+    return lastMatch;
 }
 
-boost::python::list pyof2::OpenFABMAPPython::getConfusionMatrix() const
+boost::python::list pyof2::OpenFABMAPPython::getAllLoopClosures() const
 {
-    cv::Mat confusion_mat(numPlaces, numPlaces, CV_64FC1);
-    confusion_mat.setTo(0); // init to 0's
-    for (unsigned int i = 0; i < allMatches.size(); ++i)
-    {
-        for (std::vector<of2::IMatch>::const_iterator iter = allMatches[i].begin(); iter != allMatches[i].end(); ++iter)
-        {
-            if(iter->imgIdx < 0) {
-                //add the new place to the confusion matrix 'diagonal'
-                confusion_mat.at<double>(i, (int)allMatches[i].size()-1) = iter->match;
-
-            } else {
-                //add the score to the confusion matrix
-                confusion_mat.at<double>(i, iter->imgIdx) = iter->match;
-            }
-        }
-    }
-    
-    boost::python::list matrix;
-    for (int i = 0; i < numPlaces; ++i) 
-    {
-        boost::python::list row;
-        for (int j = 0; j < numPlaces; ++j)
-        {
-            row.append(confusion_mat.at<double>(j, i));
-        }
-        matrix.append(row);
-    }
-    return matrix;
+    return loopClosures;
 }

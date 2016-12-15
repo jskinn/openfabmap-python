@@ -18,15 +18,15 @@ public:
     virtual ~OpenFABMAPPython();
     
     bool loadAndProcessImage(std::string imageFile);
-    boost::python::list getAllMatches() const;
-    boost::python::list getConfusionMatrix() const;
+    int getLastMatch() const;
+    boost::python::list getAllLoopClosures() const;
     
 private:
     std::shared_ptr<FabMapVocabluary> vocabluary;
     std::shared_ptr<of2::FabMap> fabmap;
     
-    std::vector<std::vector<of2::IMatch>> allMatches;
-    int numPlaces;
+    int lastMatch;
+    boost::python::list loopClosures;
 };
 
 } // namespace pyof2
