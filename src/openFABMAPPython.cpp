@@ -61,6 +61,7 @@
 pyof2::OpenFABMAPPython::OpenFABMAPPython(std::shared_ptr<pyof2::ChowLiuTree> chowLiuTree, boost::python::dict settings) :
         vocabluary(chowLiuTree->getVocabluary()),
         fabmap(),
+        imageIndex(0),
         lastMatch(-1),
         loopClosures()
 {
@@ -189,10 +190,17 @@ bool pyof2::OpenFABMAPPython::loadAndProcessImage(std::string imageFile)
                 }
             }
             lastMatch = bestMatchIndex;
-            loopClosures.append(bestMatchIndex);
+            loopClosures.append(boost::python::make_tuple(imageIndex, bestMatchIndex));
+            ++imageIndex;
             return true;
-        }        
+        }
+        else {
+            std::cerr << "Could not get bag of words for image " << imageFile << std::endl;
+        }
     }
+        else {
+            std::cerr << "Could not open image " << imageFile << std::endl;
+        }
     return false;
 }
 

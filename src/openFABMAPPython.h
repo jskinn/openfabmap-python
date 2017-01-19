@@ -25,6 +25,7 @@ private:
     std::shared_ptr<FabMapVocabluary> vocabluary;
     std::shared_ptr<of2::FabMap> fabmap;
     
+    int imageIndex;
     int lastMatch;
     boost::python::list loopClosures;
 };
