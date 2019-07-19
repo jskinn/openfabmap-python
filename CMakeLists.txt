@@ -37,8 +37,8 @@ endif()
 
 #Set the openFABMAP directory path
 #TODO: Convert this to a proper FindOpenFABMAP.cmake
-set(OPEN_FABMAP_INCLUDE_DIR "/opt/openFABMAP/include")
-set(OPEN_FABMAP_LIB "/opt/openFABMAP/build/lib/libopenFABMAP.so")
+set(OPEN_FABMAP_INCLUDE_DIR "/opt/openFABMAP/include" CACHE STRING "Path to parent folder of openFABMAP headers")
+set(OPEN_FABMAP_LIB "/opt/openFABMAP/build/lib/libopenFABMAP.so" CACHE STRING "Path to openFABMAP library")
 
 # I'm using a custom boost library, because the default one uses python 2 -_-
 set(BOOST_ROOT "/opt/boost_1_62_0_python3/")
