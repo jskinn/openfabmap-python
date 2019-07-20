@@ -2,9 +2,10 @@ cmake_minimum_required(VERSION 2.8)
 project(OPENFABMAP_PYTHON_BINDING)
 
 # Options
-#set(PY_INSTALL_DIR "Install directory for python modules" /usr/local/lib/python3.4/dist-packages)
+set(PYTHON_VERSION "3.4" CACHE STRING "Python version.")
+#set(PY_INSTALL_DIR "Install directory for python modules" /usr/local/lib/python${PYTHON_VERSION}/dist-packages)
 if (NOT PY_INSTALL_DIR)
-    set(PY_INSTALL_DIR /usr/local/lib/python3.4/dist-packages)
+    set(PY_INSTALL_DIR /usr/local/lib/python${PYTHON_VERSION}/dist-packages)
 endif()
 
 IF(NOT CMAKE_BUILD_TYPE)
@@ -42,9 +43,9 @@ set(OPEN_FABMAP_LIB "/opt/openFABMAP/build/lib/libopenFABMAP.so" CACHE STRING "P
 
 # I'm using a custom boost library, because the default one uses python 2 -_-
 set(BOOST_ROOT "/opt/boost_1_62_0_python3/")
-set(Python_ADDITIONAL_VERSIONS 3.4)
+set(Python_ADDITIONAL_VERSIONS ${PYTHON_VERSION})
 
-find_package(PythonLibs 3.4 REQUIRED)
+find_package(PythonLibs ${PYTHON_VERSION} REQUIRED)
 #find_package(Boost 1.45.0 REQUIRED)
 find_package(Boost 1.45.0 REQUIRED COMPONENTS python)
 find_package(OpenCV 2.4.3 REQUIRED)
