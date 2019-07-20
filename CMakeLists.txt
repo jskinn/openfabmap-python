@@ -80,6 +80,10 @@ set_target_properties(${TARGET_MODULE_NAME} PROPERTIES PREFIX "")
 
 MESSAGE(${Boost_INCLUDE_DIRS})
 
+set_target_properties( openFABMAP
+PROPERTIES
+SUFFIX ".so")
+
 target_link_libraries(${TARGET_MODULE_NAME} 
 ${OPEN_FABMAP_LIB}
 ${OpenCV_LIBS}
