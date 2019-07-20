@@ -3,10 +3,7 @@ project(OPENFABMAP_PYTHON_BINDING)
 
 # Options
 set(PYTHON_VERSION "3.4" CACHE STRING "Python version.")
-#set(PY_INSTALL_DIR "Install directory for python modules" /usr/local/lib/python${PYTHON_VERSION}/dist-packages)
-if (NOT PY_INSTALL_DIR)
-    set(PY_INSTALL_DIR /usr/local/lib/python${PYTHON_VERSION}/dist-packages)
-endif()
+set(PY_INSTALL_DIR "/usr/local/lib/python${PYTHON_VERSION}/dist-packages" CACHE STRING "Install location for library file.")
 
 IF(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE Release)
