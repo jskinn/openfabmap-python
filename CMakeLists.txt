@@ -77,6 +77,7 @@ src/openFABMAPPython.cpp
 src/PythonBindings.cpp
 )
 set_target_properties(${TARGET_MODULE_NAME} PROPERTIES PREFIX "")
+set_target_properties(${TARGET_MODULE_NAME} PROPERTIES SUFFIX ".so")
 
 MESSAGE(${Boost_INCLUDE_DIRS})
 
